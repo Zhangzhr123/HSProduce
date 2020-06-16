@@ -220,13 +220,16 @@ public class FormingActivity extends BaseActivity {
 
     //开始
     public void startPlan() {
-        if (isNull == 1) {
+        if (isNull == 1 || isNull == 2) {
             //开始计划
             dialogToStart();
-        } else if (isNull == 2) {
-            //完成计划
-            dialogToFinish();
-        } else if (isNull == 3) {
+        }
+//        else if (isNull == 2) {
+//            //完成计划
+//            //执行结束上一计划
+//            dialogToFinish();
+//        }
+        else if (isNull == 3) {
             Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
         } else {
@@ -313,7 +316,7 @@ public class FormingActivity extends BaseActivity {
     //查询计划
     public void getCurrentVPlan() {
         //获取输入机台上barcode
-        if(!StringUtil.isNullOrEmpty(mchid)){
+        if (!StringUtil.isNullOrEmpty(mchid)) {
             mchid = "";
         }
         mchid = tvMchid.getText().toString().trim();
@@ -378,10 +381,18 @@ public class FormingActivity extends BaseActivity {
                     Toast.makeText(FormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!StringUtil.isNullOrEmpty(startCode)){
+                if (!StringUtil.isNullOrEmpty(startCode)) {
                     startCode = "";
                 }
                 startCode = nextCode;
+                //如果存在上一个未完成的计划，结束上一计划
+                if (vplan != null && isNull == 2) {
+                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
+                    String endBarcode = String.format("%06d", endnumber);
+                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
+                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                    new DIALOGFINISHTask().execute(param1);
+                }
                 //执行开始计划接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -502,16 +513,16 @@ public class FormingActivity extends BaseActivity {
                 }
 
                 //上一计划结束条码
-                if(!StringUtil.isNullOrEmpty(preEndCode)){
+                if (!StringUtil.isNullOrEmpty(preEndCode)) {
                     preEndCode = "";
                 }
                 preEndCode = ed_EndCode.getText().toString().trim();
                 //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
-                if(ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                if (ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
                     //执行结束上一计划
                     String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                     new DIALOGFINISHTask().execute(param);
-                }else if(!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                } else if (!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
                     //执行开始计划接口更新开始条码
                     String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                     new PRESTARTTask().execute(param);
@@ -544,9 +555,9 @@ public class FormingActivity extends BaseActivity {
         if (vplan != null) {
             itnbr.setText(v.getItnbr());
             itdec.setText(v.getItdsc());
-            if (v.getBarcodestart() == null){
+            if (v.getBarcodestart() == null) {
                 ed_StartCode.setText(startCode);
-            }else{
+            } else {
                 ed_StartCode.setText(v.getBarcodestart());
             }
             ed_EndCode.setText(v.getBarcodeend());
@@ -571,7 +582,7 @@ public class FormingActivity extends BaseActivity {
                 String jt = mchid;
                 jt = jt.substring(jt.length() - 2, jt.length());
                 //当前计划结束条码
-                if(!StringUtil.isNullOrEmpty(endCode)){
+                if (!StringUtil.isNullOrEmpty(endCode)) {
                     endCode = "";
                 }
                 endCode = ed_EndCode.getText().toString();
@@ -633,24 +644,24 @@ public class FormingActivity extends BaseActivity {
                     return;
                 }
                 //判断当前计划是刚开始还是已经开始，根据获取对象中有无开始条码来判断
-                if(!StringUtil.isNullOrEmpty(v.getBarcodestart())){
+                if (!StringUtil.isNullOrEmpty(v.getBarcodestart())) {
                     //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                    if(!ed_StartCode.getText().toString().equals(v.getBarcodestart())){
+                    if (!ed_StartCode.getText().toString().equals(v.getBarcodestart())) {
                         //执行开始计划接口更新开始条码
                         String param = "VPLANID=" + currid + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                         new THISSTARTTask().execute(param);
-                    }else{
+                    } else {
                         //执行结束当前计划
                         String param = "VPLANID=" + currid + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                         new FINISHTask().execute(param);
                     }
-                }else{
+                } else {
                     //如果开始条码不一致怎更新开始条码在结束，如果一致则直接结束计划
-                    if(!ed_StartCode.getText().toString().equals(startCode)){
+                    if (!ed_StartCode.getText().toString().equals(startCode)) {
                         //执行开始计划接口更新开始条码
                         String param = "VPLANID=" + currid + "&StartBarcode=" + startCode + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                         new THISSTARTTask().execute(param);
-                    }else{
+                    } else {
                         //执行结束当前计划
                         String param = "VPLANID=" + currid + "&EndBarcode=" + endCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                         new FINISHTask().execute(param);
@@ -905,7 +916,7 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //弹窗执行开始计划
-                        dialogToStart();
+//                        dialogToStart();
                     } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;

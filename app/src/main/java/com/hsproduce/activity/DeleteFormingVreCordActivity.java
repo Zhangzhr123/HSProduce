@@ -18,7 +18,6 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.FormingPlanAdapter;
 import com.hsproduce.bean.VPlan;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -37,7 +36,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 输入机台号和时间查询已完成成型计划，点击计划展示信息扫描条码删除生产实绩
  * 广播监听回调触发响应事件
  * createBy zahngzr @ 2019-12-30
- * 1.封装SDK
  */
 public class DeleteFormingVreCordActivity extends BaseActivity {
 
@@ -74,14 +72,14 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //展示页面
@@ -228,35 +226,35 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        barCode = "";
-//                    }
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        if (barCode.length() == 12 && isNum(barCode) == true) {
-//                            getBarCode(barCode);
-//                        }else{
-//                            Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    } else {
-//                        Toast.makeText(DeleteFormingVreCordActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        barCode = "";
+                    }
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        if (barCode.length() == 12 && isNum(barCode) == true) {
+                            getBarCode(barCode);
+                        }else{
+                            Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        Toast.makeText(DeleteFormingVreCordActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     public Boolean isNum(String s) {
         char[] ch = s.toCharArray();
@@ -415,12 +413,12 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
     }
 
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //递归显示
     public String getlog(List<String> list) {
@@ -450,29 +448,6 @@ public class DeleteFormingVreCordActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(barCode)) {
-                        barCode = "";
-                    }
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        if ((SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                            barCode = SystemBroadCast.barCode;
-                            getBarCode(SystemBroadCast.barCode);
-                        }else{
-                            SystemBroadCast.barCode = "";
-                            Toast.makeText(DeleteFormingVreCordActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    }else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(DeleteFormingVreCordActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             case 22://右方向键
                 if (isShow) {
                     getCurrentVPlan();

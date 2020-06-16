@@ -17,7 +17,6 @@ import com.hsproduce.R;
 import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.bean.Team;
 import com.hsproduce.bean.VreCord;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -39,7 +38,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * createBy zhangzhr @ 2019-12-21
  * 1.注意规格名称中文和特殊字符需要转换
  * 2.扫描改为广播监听响应方式
- * 3.封装SDK
  */
 public class FormingDetailChangeActivity extends BaseActivity {
 
@@ -69,14 +67,14 @@ public class FormingDetailChangeActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //补录条码
@@ -186,29 +184,29 @@ public class FormingDetailChangeActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空 是否为12位 是否纯数字组成
-//                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
-//                        tvBarCode.setText(barCode);
-//                        getCodeDetail();
-//                    } else {
-//                        Toast.makeText(FormingDetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        tvBarCode.setText(barCode);
+                        getCodeDetail();
+                    } else {
+                        Toast.makeText(FormingDetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //根据条码查询明细
     class SelDetailedTask extends AsyncTask<String, Void, String> {
@@ -467,12 +465,12 @@ public class FormingDetailChangeActivity extends BaseActivity {
         return sb.toString();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //是否纯数字
     public Boolean isNum(String s) {
@@ -504,20 +502,9 @@ public class FormingDetailChangeActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时
         switch (keyCode) {
-            case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                        tvBarCode.setText(SystemBroadCast.barCode);
-                        getCodeDetail();
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(FormingDetailChangeActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
+//            case 0://扫描键
+//                getCodeDetail();//查询明细
+//                break;
             case 22://右方向键
                 getCodeDetail();
                 break;

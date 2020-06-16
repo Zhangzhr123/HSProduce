@@ -18,7 +18,6 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.bean.CheckReason;
 import com.hsproduce.bean.VreCord;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -37,7 +36,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 扫描条码显示质检信息、硫化条码明细和成型条码明细，使用广播监听扫描方式获取条码
  * 点击不合格出现弹窗输入不合格原因，点击合格则直接设为合格
  * createBy zahngzr @ 2020-03-09
- * 1.封装SDK
  */
 public class CheckAgainActivity extends BaseActivity {
 
@@ -77,14 +75,14 @@ public class CheckAgainActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //扫描框
@@ -311,30 +309,30 @@ public class CheckAgainActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    sBarCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空 是否为12位 是否纯数字组成
-//                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
-//                        sBarCode = barCode;
-//                        getBarCode(barCode);
-//                    } else {
-//                        Toast.makeText(CheckAgainActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    sBarCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        sBarCode = barCode;
+                        getBarCode(barCode);
+                    } else {
+                        Toast.makeText(CheckAgainActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
 
     //获取成型明细
@@ -566,12 +564,12 @@ public class CheckAgainActivity extends BaseActivity {
         }
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //是否纯数字
     public Boolean isNum(String s) {
@@ -604,21 +602,6 @@ public class CheckAgainActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
-                    sBarCode = "";
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                        sBarCode = SystemBroadCast.barCode;
-                        getBarCode(SystemBroadCast.barCode);
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(CheckAgainActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             case 22://右方向键
                 getBarCode();
                 break;

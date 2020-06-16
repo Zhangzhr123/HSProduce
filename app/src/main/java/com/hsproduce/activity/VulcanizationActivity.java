@@ -15,7 +15,6 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.VPlanAdapter;
 import com.hsproduce.bean.VPlan;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.SoundPlayUtils;
@@ -33,7 +32,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 扫描机台号直接进入扫描条码页面，扫描条码，硫化计划更改为生产中，并将扫描的条码添加进生产实绩中
  * 成功添加进生产实绩后此条码写入扫描纪录框中
  * createBy zhangzhr @ 2019-12-21
- * 1.封装SDK
  */
 public class VulcanizationActivity extends BaseActivity {
 
@@ -65,14 +63,14 @@ public class VulcanizationActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     //初始化控件
     public void initView() {
@@ -150,39 +148,39 @@ public class VulcanizationActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        //判断位数和是否是纯数字
-//                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
-//                            getBarCode(barCode);
-//                        } else if (barCode.length() == 4 && isNumeric(barCode) == false) {
-//                            getPlan(barCode);
-//                        } else {
-//                            Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-//                            showMyToast(toast, 500);
-//                            return;
-//                        }
-//
-//                    } else {
-//                        Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-//                        showMyToast(toast, 500);
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        //判断位数和是否是纯数字
+                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
+                            getBarCode(barCode);
+                        } else if (barCode.length() == 4 && isNumeric(barCode) == false) {
+                            getPlan(barCode);
+                        } else {
+                            Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
+                            return;
+                        }
+
+                    } else {
+                        Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //查询任务
     class MyTask extends AsyncTask<String, Void, String> {
@@ -377,31 +375,6 @@ public class VulcanizationActivity extends BaseActivity {
         //右方向键
         String msg = "";
         switch (keyCode) {
-            //扫描键
-            case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        //判断位数和是否是纯数字
-                        if ((SystemBroadCast.barCode).length() == 12 && isNumeric(SystemBroadCast.barCode) == true) {
-                            getBarCode(SystemBroadCast.barCode);
-                        } else if ((SystemBroadCast.barCode).length() == 4 && isNumeric(SystemBroadCast.barCode) == false) {
-                            getPlan(SystemBroadCast.barCode);
-                        } else {
-                            SystemBroadCast.barCode = "";
-                            Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                            showMyToast(toast, 500);
-                            break;
-                        }
-
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(VulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             //返回键
             case 4:
                 //返回功能页
@@ -446,12 +419,12 @@ public class VulcanizationActivity extends BaseActivity {
         }
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
 
 }

@@ -1,7 +1,5 @@
 package com.hsproduce.activity;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,8 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,15 +17,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.hsproduce.App;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.hsproduce.broadcast.SystemBroadCast.addBroadcastReceiver;
-import static com.hsproduce.broadcast.SystemBroadCast.closeBroadcastReceiver;
 
 /**
  * 基础页面
@@ -42,11 +34,6 @@ public abstract class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); //弹出软键盘
-        //判断PDA类型
-        if (App.pdaType.equals("销邦科技X5A")) {
-            //PDA调用注册广播监听
-            addBroadcastReceiver(BaseActivity.this);
-        }
     }
 
     //调度触摸事件
@@ -85,7 +72,6 @@ public abstract class BaseActivity extends Activity {
 
     /**
      * 获取InputMethodManager，隐藏软键盘
-     *
      * @param token
      */
     private void hideKeyboard(IBinder token) {
@@ -96,12 +82,12 @@ public abstract class BaseActivity extends Activity {
     }
 
     //返回
-    public void back(View v) {
+    public void back(View v){
         finish();
     }
 
     //登出
-    public void logout(View v) {
+    public void logout(View v){
         final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
 //        normalDialog.setIcon(R.drawable.icon_dialog);
         normalDialog.setTitle("提醒");
@@ -111,7 +97,7 @@ public abstract class BaseActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         new LogoutTask().execute();
-                        App.ip = "";
+                        App.ip="";
                         startActivity(new Intent(BaseActivity.this, LoginActivity.class));
                         finish();
                     }
@@ -129,7 +115,7 @@ public abstract class BaseActivity extends Activity {
     }
 
     //用户提示信息
-    public void prompt(String v) {
+    public void prompt(String v){
         final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(this);
         normalDialog.setTitle("提示");
         normalDialog.setMessage(v);
@@ -152,28 +138,29 @@ public abstract class BaseActivity extends Activity {
     }
 
     //返回功能页面
-    public void tofunction() {
-        startActivity(new Intent(this, FunctionActivity.class));
+    public void tofunction(){
+        startActivity(new Intent(this,FunctionActivity.class));
         finish();
     }
 
     //返回主页面
-    public void tomain(View v) {
+    public void tomain(View v){
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     //初始权限
-    public void initpermission() {
-        int REQUEST_EXTERNAL_STORAGE = 1;
-        String[] PERMISSIONS_STORAGE = {
+    public void initpermission(){
+        int REQUEST_EXTERNAL_STORAGE=1;
+        String[] PERMISSIONS_STORAGE={
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
 
-        if (PackageManager.PERMISSION_GRANTED !=
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1);
+        if (PackageManager.PERMISSION_GRANTED!=
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
+            ActivityCompat.requestPermissions(this,PERMISSIONS_STORAGE,1);
         }
     }
 
@@ -201,18 +188,6 @@ public abstract class BaseActivity extends Activity {
                 toast.cancel();
                 timer.cancel();
             }
-        }, cnt);
+        }, cnt );
     }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onPause() {
-        //判断PDA类型
-        if (App.pdaType.equals("销邦科技X5A")) {
-            //PDA关闭广播监听
-            closeBroadcastReceiver(BaseActivity.this);
-        }
-        super.onPause();
-    }
-
 }

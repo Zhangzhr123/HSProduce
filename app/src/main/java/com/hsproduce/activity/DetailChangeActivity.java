@@ -16,7 +16,6 @@ import com.hsproduce.R;
 import com.hsproduce.adapter.DialogItemAdapter;
 import com.hsproduce.bean.Team;
 import com.hsproduce.bean.VreCord;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -38,7 +37,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 2.规格名称中文和特殊字符需要转换
  * 3.班组字段不传递给后台
  * 4.扫描改为广播监听方式
- * 5.封装SDK
  */
 public class DetailChangeActivity extends BaseActivity {
 
@@ -52,8 +50,10 @@ public class DetailChangeActivity extends BaseActivity {
     private ArrayAdapter<String> adapter;
     //存放班组数据
     private List<Team> teamList = new ArrayList<>();
+    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
+    private long mExitTime = 0;
     //定义变量
-    private String barCode = "", spesc = "", createUser = "", lorR = "", shift = "", mchId = "", spescName = "", codeId = "", team = "", itnbr = "", itdsc = "";
+    private String barCode = "", spesc = "", createUser = "", lorR = "", shift = "", mchId = "", spescName = "", codeId = "", team = "", itnbr = "", itdsc = "d";
     //Dialog显示列表
     private List<String> itdscList = new ArrayList<>();
     private DialogItemAdapter itnbrAdapter;
@@ -72,14 +72,14 @@ public class DetailChangeActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //补录条码
@@ -199,29 +199,29 @@ public class DetailChangeActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空 是否为12位 是否纯数字组成
-//                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
-//                        tvBarcode.setText(barCode);
-//                        getCodeDetail();
-//                    } else {
-//                        Toast.makeText(DetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空 是否为12位 是否纯数字组成
+                    if (!StringUtil.isNullOrEmpty(barCode) && barCode.length() == 12 && isNum(barCode) == true) {
+                        tvBarcode.setText(barCode);
+                        getCodeDetail();
+                    } else {
+                        Toast.makeText(DetailChangeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //班组
     class ShiftTask extends AsyncTask<String, Void, String> {
@@ -481,12 +481,12 @@ public class DetailChangeActivity extends BaseActivity {
         }
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //是否纯数字
     public Boolean isNum(String s) {
@@ -516,27 +516,17 @@ public class DetailChangeActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode){
-            case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode) && (SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                        tvBarcode.setText(SystemBroadCast.barCode);
-                        getCodeDetail();
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(DetailChangeActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
+//            case 0:
+//                if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
+//                    getCodeDetail();
+//                }
+//                break;
             case 22:
                 if(!StringUtil.isNullOrEmpty(tvBarcode.getText().toString().trim())){
                     getCodeDetail();
                 }
                 break;
             case 4:
-                clear();
                 startActivity(new Intent(DetailChangeActivity.this, FunctionActivity.class));
                 this.finish();
                 break;
@@ -545,18 +535,5 @@ public class DetailChangeActivity extends BaseActivity {
         return true;
     }
 
-    private void clear(){
-        barCode = "";
-        spesc = "";
-        createUser = "";
-        lorR = "";
-        shift = "";
-        mchId = "";
-        spescName = "";
-        codeId = "";
-        team = "";
-        itnbr = "";
-        itdsc = "";
-    }
 
 }

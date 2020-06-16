@@ -19,7 +19,6 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.VPlanAdapter;
 import com.hsproduce.bean.VPlan;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.SoundPlayUtils;
@@ -40,7 +39,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 扫描机台号直接进入扫描条码页面，扫描条码，删除此条码的生产实绩
  * 广播监听回调触发事件，成功后此条码写入扫描纪录框中
  * createBy zhangzhr @ 2019-12-30
- * 1.封装SDK
  */
 public class DeleteVulcanizationActivity extends BaseActivity {
 
@@ -68,14 +66,14 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     //初始化控件
     public void initView() {
@@ -130,47 +128,47 @@ public class DeleteVulcanizationActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    if (!StringUtil.isNullOrEmpty(mchId)) {
-//                        mchId = "";
-//                    }
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        barCode = "";
-//                    }
-//                    String massage = "";
-//                    massage = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(massage)) {
-////                        massage = massage.toUpperCase();
-////                        if (massage.length() == 4 && (massage.endsWith("L") || massage.endsWith("R"))) {
-////                            mchId = massage;
-//////                            tvMchid.setText(mchId);
-////                            showVual();
-//////                            getPlan(massage);
-////                        } else
-//                        if (massage.length() == 12 && isNum(massage) == true) {
-//                            barCode = massage;
-//                            getBarCode(massage);
-//                        }else{
-//                            Toast.makeText(DeleteVulcanizationActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    } else {
-//                        Toast.makeText(DeleteVulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    if (!StringUtil.isNullOrEmpty(mchId)) {
+                        mchId = "";
+                    }
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        barCode = "";
+                    }
+                    String massage = "";
+                    massage = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(massage)) {
+//                        massage = massage.toUpperCase();
+//                        if (massage.length() == 4 && (massage.endsWith("L") || massage.endsWith("R"))) {
+//                            mchId = massage;
+////                            tvMchid.setText(mchId);
+//                            showVual();
+////                            getPlan(massage);
+//                        } else
+                        if (massage.length() == 12 && isNum(massage) == true) {
+                            barCode = massage;
+                            getBarCode(massage);
+                        }else{
+                            Toast.makeText(DeleteVulcanizationActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        Toast.makeText(DeleteVulcanizationActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     public Boolean isNum(String s) {
         char[] ch = s.toCharArray();
@@ -285,34 +283,6 @@ public class DeleteVulcanizationActivity extends BaseActivity {
         //右方向键
         String msg = "";
         switch (keyCode) {
-            case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(mchId)) {
-                        mchId = "";
-                    }
-                    if (!StringUtil.isNullOrEmpty(barCode)) {
-                        barCode = "";
-                    }
-                    //判断条码是否为空
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        if ((SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                            barCode = SystemBroadCast.barCode;
-                            getBarCode(SystemBroadCast.barCode);
-                        }else{
-                            SystemBroadCast.barCode = "";
-                            Toast toast = Toast.makeText(DeleteVulcanizationActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-                            showMyToast(toast, 500);
-                            break;
-                        }
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(DeleteVulcanizationActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             case 22://右方向键
                 if (!StringUtil.isNullOrEmpty(barCode)) {
                     barCode = "";
@@ -345,5 +315,14 @@ public class DeleteVulcanizationActivity extends BaseActivity {
 
         return true;
     }
+
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
+
 
 }

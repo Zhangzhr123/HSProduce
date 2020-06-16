@@ -15,7 +15,6 @@ import com.hsproduce.App;
 import com.hsproduce.R;
 import com.hsproduce.adapter.VPlanAdapter;
 import com.hsproduce.bean.VPlan;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -32,13 +31,14 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 成型胎胚报废页面
  * 扫描条码，报废条码成功后写入扫描记录中，广播监听响应事件
  * createBy zhangzhr @ 2019-12-21
- * 1.封装SDK
  */
 public class FormingBarCodeActivity extends BaseActivity {
 
     //轮胎条码 条码计数  条码记录
     private TextView tvBarCode, tvNum, tvBarCodeLog;
     private ButtonView btGetplan;
+    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
+    private long mExitTime = 0;
     //绑定条码个数
     private int number = 0;
     //轮胎条码
@@ -56,14 +56,14 @@ public class FormingBarCodeActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     //初始化控件
     public void initView() {
@@ -122,30 +122,30 @@ public class FormingBarCodeActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        barCode = "";
-//                    }
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        getBarCode(barCode);
-//                    } else {
-//                        Toast.makeText(FormingBarCodeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        barCode = "";
+                    }
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        getBarCode(barCode);
+                    } else {
+                        Toast.makeText(FormingBarCodeActivity.this, "请重新扫描", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //成型胚胎报废
     class TypeCodeTask extends AsyncTask<String, Void, String> {
@@ -186,8 +186,7 @@ public class FormingBarCodeActivity extends BaseActivity {
                         tvNum.setText(number + "");
 //                        Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast toast = Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
+                        Toast.makeText(FormingBarCodeActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -210,21 +209,11 @@ public class FormingBarCodeActivity extends BaseActivity {
         return logstr;
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
-
-    public Boolean isNum(String s) {
-        char[] ch = s.toCharArray();
-        for (char c : ch) {
-            if (!(c >= '0' && c <= '9')) {
-                return false;
-            }
-        }
-        return true;
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
     }
 
     //键盘监听
@@ -246,29 +235,9 @@ public class FormingBarCodeActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(barCode)) {
-                        barCode = "";
-                    }
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        if ((SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                            barCode = SystemBroadCast.barCode;
-                            getBarCode(SystemBroadCast.barCode);
-                        }else{
-                            SystemBroadCast.barCode = "";
-                            Toast.makeText(FormingBarCodeActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(FormingBarCodeActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
+//            case 0://扫描键
+//                getBarCode();//获取明细
+//                break;
             case 22://右方向键
                 getBarCode();//获取明细
                 break;

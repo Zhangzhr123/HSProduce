@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.hsproduce.App;
 import com.hsproduce.R;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -34,7 +33,6 @@ import static com.hsproduce.broadcast.SystemBroadCast.SCN_CUST_EX_SCODE;
  * 扫描条码将条码从装车单明细中删除
  * creatBy zhangzhr @ 2020-01-07
  * 1.扫描改为广播监听方式扫描
- * 2.封装SDK
  */
 public class LoadScanningActivity extends BaseActivity {
 
@@ -64,14 +62,14 @@ public class LoadScanningActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //条码扫描框
@@ -138,33 +136,33 @@ public class LoadScanningActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        if (barCode.length() == 12 && isNum(barCode) == true) {
-//                            outVLoad(barCode);
-//                        } else {
-//                            Toast toast = Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-//                            showMyToast(toast, 500);
-//                            return;
-//                        }
-//                    } else {
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        if (barCode.length() == 12 && isNum(barCode) == true) {
+                            outVLoad(barCode);
+                        } else {
+                            Toast toast = Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     public Boolean isNum(String s) {
         char[] ch = s.toCharArray();
@@ -240,12 +238,12 @@ public class LoadScanningActivity extends BaseActivity {
         return logstr;
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //键盘监听
     @Override
@@ -263,59 +261,23 @@ public class LoadScanningActivity extends BaseActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //弹开时执行操作
-        switch(keyCode){
-            case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        if ((SystemBroadCast.barCode).length() == 12 && isNum(SystemBroadCast.barCode) == true) {
-                            outVLoad(SystemBroadCast.barCode);
-                        } else {
-                            SystemBroadCast.barCode = "";
-                            Toast toast = Toast.makeText(LoadScanningActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-                            showMyToast(toast, 500);
-                            break;
-                        }
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
-            case 22:
-                if (!StringUtil.isNullOrEmpty(scanBarCode)) {
-                    scanBarCode = "";
-                }
-                scanBarCode = tvBarCode.getText().toString().trim();
-                outVLoad(scanBarCode);
-                break;
-            case 4:
-                tvAnum.setText("0");
-                number = 0;
-                tvBarCodeLog.setText("");
-                list.clear();
-                codeList.clear();
+        if (keyCode == 22) {
+            if (!StringUtil.isNullOrEmpty(scanBarCode)) {
                 scanBarCode = "";
-                tofunction();
-                break;
+            }
+            scanBarCode = tvBarCode.getText().toString().trim();
+            outVLoad(scanBarCode);
         }
-//        if (keyCode == 22) {
-//            if (!StringUtil.isNullOrEmpty(scanBarCode)) {
-//                scanBarCode = "";
-//            }
-//            scanBarCode = tvBarCode.getText().toString().trim();
-//            outVLoad(scanBarCode);
-//        }
         //返回键返回功能页面
-//        if (keyCode == 4) {
-//            tvAnum.setText("0");
-//            number = 0;
-//            tvBarCodeLog.setText("");
-//            list.clear();
-//            codeList.clear();
-//            scanBarCode = "";
-//            tofunction();
-//        }
+        if (keyCode == 4) {
+            tvAnum.setText("0");
+            number = 0;
+            tvBarCodeLog.setText("");
+            list.clear();
+            codeList.clear();
+            scanBarCode = "";
+            tofunction();
+        }
         return true;
     }
 

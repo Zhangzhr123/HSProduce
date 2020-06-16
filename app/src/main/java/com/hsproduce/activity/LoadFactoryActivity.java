@@ -22,7 +22,6 @@ import com.hsproduce.adapter.*;
 import com.hsproduce.bean.VLoad;
 import com.hsproduce.bean.VLoadHxm;
 import com.hsproduce.bean.VreCord;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -47,13 +46,12 @@ import static java.lang.Thread.sleep;
  * creatBy zhangzhr @ 2020-01-07
  * 1.扫描方式改为广播监听响应
  * 2.倒序输出修改
- * 3.封装SDK
  */
 public class LoadFactoryActivity extends BaseActivity {
 
     //定义控件
     private HorizontalScrollView hs_load, hs_spesc;
-    private View ll_search, llfacok, llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
+    private View ll_search, ll_load, llfacok, llcode, llscanok, llcodelog, lloutcode, lloutcodelog, lloutok;
     private TextView outbarcodelog, barcode, anum, search, itnbr, itndsc, outbarcode, outanum;
     private TextView barcodelog;
     private ButtonView ok, outok;
@@ -100,14 +98,14 @@ public class LoadFactoryActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
         //标题栏
@@ -120,7 +118,7 @@ public class LoadFactoryActivity extends BaseActivity {
         view6 = findViewById(R.id.view6);
         //layout
         ll_search = findViewById(R.id.ll_search);
-//        ll_load = findViewById(R.id.ll_load_fac);
+        ll_load = findViewById(R.id.ll_load_fac);
         llfacok = findViewById(R.id.ll_fac_ok);
         llscanok = findViewById(R.id.ll_scan_ok);
         llcode = findViewById(R.id.ll_code);
@@ -254,7 +252,7 @@ public class LoadFactoryActivity extends BaseActivity {
         llfacok.setVisibility(View.GONE);
         hs_spesc.setVisibility(View.GONE);
         table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
         lvloadfac.setVisibility(View.GONE);
         //显示
         inload.setVisibility(View.VISIBLE);//标题
@@ -278,7 +276,7 @@ public class LoadFactoryActivity extends BaseActivity {
         llfacok.setVisibility(View.GONE);
         hs_spesc.setVisibility(View.GONE);
         table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
         lvloadfac.setVisibility(View.GONE);
         //显示
         outload.setVisibility(View.VISIBLE);//标题
@@ -299,7 +297,7 @@ public class LoadFactoryActivity extends BaseActivity {
         llfacok.setVisibility(View.GONE);
         hs_spesc.setVisibility(View.GONE);
         table.setVisibility(View.GONE);
-//        ll_load.setVisibility(View.GONE);
+        ll_load.setVisibility(View.GONE);
         lvloadfac.setVisibility(View.GONE);
         //显示
         ll_search.setVisibility(View.VISIBLE);
@@ -338,7 +336,7 @@ public class LoadFactoryActivity extends BaseActivity {
         //显示
         load.setVisibility(View.VISIBLE);//标题
         lvloadfac.setVisibility(View.VISIBLE);
-//        ll_load.setVisibility(View.VISIBLE);
+        ll_load.setVisibility(View.VISIBLE);
         table.setVisibility(View.VISIBLE);
         hs_spesc.setVisibility(View.VISIBLE);
         llfacok.setVisibility(View.VISIBLE);
@@ -365,7 +363,7 @@ public class LoadFactoryActivity extends BaseActivity {
         //显示
         load.setVisibility(View.VISIBLE);//标题
         lvloadfac.setVisibility(View.VISIBLE);
-//        ll_load.setVisibility(View.VISIBLE);
+        ll_load.setVisibility(View.VISIBLE);
         table.setVisibility(View.VISIBLE);
         hs_spesc.setVisibility(View.VISIBLE);
         llfacok.setVisibility(View.VISIBLE);
@@ -436,40 +434,40 @@ public class LoadFactoryActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String barCode = "";
-//                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断条码是否为空
-//                    if (!StringUtil.isNullOrEmpty(barCode)) {
-//                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
-//                            if (sizePager == 2) {//出厂扫描
-//                                loadcode(barCode);
-//                            } else if (sizePager == 3) {//取消扫描
-//                                outcode(barCode);
-//                            } else {
-//                                return;
-//                            }
-//
-//                        } else {
-//                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-//                            showMyToast(toast, 500);
-//                            return;
-//                        }
-//                    } else {
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String barCode = "";
+                    barCode = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断条码是否为空
+                    if (!StringUtil.isNullOrEmpty(barCode)) {
+                        if (barCode.length() == 12 && isNumeric(barCode) == true) {
+                            if (sizePager == 2) {//出厂扫描
+                                loadcode(barCode);
+                            } else if (sizePager == 3) {//取消扫描
+                                outcode(barCode);
+                            } else {
+                                return;
+                            }
+
+                        } else {
+                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //展示装车单信息
     class SelVLoadTask extends AsyncTask<String, Void, String> {
@@ -562,7 +560,7 @@ public class LoadFactoryActivity extends BaseActivity {
                         hs_load.setVisibility(View.GONE);
                         //显示
                         lvloadfac.setVisibility(View.VISIBLE);
-//                        ll_load.setVisibility(View.VISIBLE);
+                        ll_load.setVisibility(View.VISIBLE);
                         table.setVisibility(View.VISIBLE);
                         hs_spesc.setVisibility(View.VISIBLE);
                         llfacok.setVisibility(View.VISIBLE);
@@ -835,12 +833,12 @@ public class LoadFactoryActivity extends BaseActivity {
         return logstr;
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
     //键盘监听
     @Override
@@ -893,31 +891,6 @@ public class LoadFactoryActivity extends BaseActivity {
         }
         //增加快捷键
         switch (keyCode) {
-            case 0://扫描键
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        if ((SystemBroadCast.barCode).length() == 12 && isNumeric(SystemBroadCast.barCode) == true) {
-                            if (sizePager == 2) {//出厂扫描
-                                loadcode(SystemBroadCast.barCode);
-                            } else if (sizePager == 3) {//取消扫描
-                                outcode(SystemBroadCast.barCode);
-                            } else {
-                                SystemBroadCast.barCode = "";
-                                break;
-                            }
-                        } else {
-                            SystemBroadCast.barCode = "";
-                            Toast toast = Toast.makeText(LoadFactoryActivity.this, "条码不正确，请重新扫描", Toast.LENGTH_LONG);
-                            showMyToast(toast, 500);
-                            break;
-                        }
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             case 131://F1键
                 if (sizePager == 1) {
                     getInScan();//出场扫描

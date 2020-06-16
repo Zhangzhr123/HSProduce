@@ -19,7 +19,6 @@ import com.hsproduce.R;
 import com.hsproduce.adapter.ProductItemAdapter;
 import com.hsproduce.bean.VPlan;
 import com.hsproduce.bean.VreCord;
-import com.hsproduce.broadcast.SystemBroadCast;
 import com.hsproduce.util.HttpUtil;
 import com.hsproduce.util.PathUtil;
 import com.hsproduce.util.StringUtil;
@@ -65,14 +64,14 @@ public class ProductNumActivity extends BaseActivity {
         initEvent();
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onResume() {
-//        //注册广播监听
-//        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
-//        registerReceiver(scanDataReceiver, intentFilter);
-//        super.onResume();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onResume() {
+        //注册广播监听
+        IntentFilter intentFilter = new IntentFilter(SCN_CUST_ACTION_SCODE);
+        registerReceiver(scanDataReceiver, intentFilter);
+        super.onResume();
+    }
 
     public void initView() {
 //        tvDnum = (TextView) findViewById(R.id.dnum);
@@ -153,37 +152,37 @@ public class ProductNumActivity extends BaseActivity {
     }
 
     //广播监听
-//    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
-//                try {
-//                    String mchid = "";
-//                    mchid = intent.getStringExtra(SCN_CUST_EX_SCODE);
-//                    //判断机台号是否为空
-//                    if (!StringUtil.isNullOrEmpty(mchid)) {
-//                        //判断位数和是否是纯数字
-//                        if (mchid.length() == 4 && isNumeric(mchid) == false) {
-//                            setMchId(mchid);
-//                        } else {
-//                            Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-//                            showMyToast(toast, 500);
-//                            return;
-//                        }
-//
-//                    } else {
-//                        Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-//                        showMyToast(toast, 500);
-//                        return;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.e("ScannerService", e.toString());
-//                }
-//            }
-//        }
-//    };
+    private BroadcastReceiver scanDataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCN_CUST_ACTION_SCODE)) {
+                try {
+                    String mchid = "";
+                    mchid = intent.getStringExtra(SCN_CUST_EX_SCODE);
+                    //判断机台号是否为空
+                    if (!StringUtil.isNullOrEmpty(mchid)) {
+                        //判断位数和是否是纯数字
+                        if (mchid.length() == 4 && isNumeric(mchid) == false) {
+                            setMchId(mchid);
+                        } else {
+                            Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                            showMyToast(toast, 500);
+                            return;
+                        }
+
+                    } else {
+                        Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
+                        showMyToast(toast, 500);
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScannerService", e.toString());
+                }
+            }
+        }
+    };
 
     //获取当班产量
     class GetDnumSumTask extends AsyncTask<String, Void, String> {
@@ -257,27 +256,6 @@ public class ProductNumActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //按键弹开
         switch (keyCode) {
-            case 0:
-                if(App.pdaType.equals("销邦科技X5A")){
-                    if (!StringUtil.isNullOrEmpty(SystemBroadCast.barCode)) {
-                        //判断位数和是否是纯数字
-                        if ((SystemBroadCast.barCode).length() == 4 && isNumeric(SystemBroadCast.barCode) == false) {
-                            setMchId(SystemBroadCast.barCode);
-                        } else {
-                            SystemBroadCast.barCode = "";
-                            Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                            showMyToast(toast, 500);
-                            break;
-                        }
-                    } else {
-                        SystemBroadCast.barCode = "";
-                        Toast toast = Toast.makeText(ProductNumActivity.this, "请重新扫描", Toast.LENGTH_LONG);
-                        showMyToast(toast, 500);
-                        break;
-                    }
-                    SystemBroadCast.barCode = "";
-                }
-                break;
             case 22://右方向键
 //                getProduct();
                 String mchid = ed_MchId.getText().toString().trim();
@@ -293,11 +271,11 @@ public class ProductNumActivity extends BaseActivity {
         return true;
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onPause() {
-//        unregisterReceiver(scanDataReceiver);
-//        super.onPause();
-//    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onPause() {
+        unregisterReceiver(scanDataReceiver);
+        super.onPause();
+    }
 
 }

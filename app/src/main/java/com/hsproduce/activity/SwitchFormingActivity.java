@@ -169,17 +169,19 @@ public class SwitchFormingActivity extends BaseActivity {
     }
 
     public void replace() {
-        if (isNull == 1) {
+        if (isNull == 1 || isNull == 2) {
             //开始计划
             dialogToStart();
             //返回上一页面，并且上一页面重新查询。
 
-        } else if (isNull == 2) {
-            //完成计划
-            dialogToFinish();
-            //返回上一页面，并且上一页面重新查询。
-
-        } else if (isNull == 3) {
+        }
+//        else if (isNull == 2) {
+//            //完成计划
+//            dialogToFinish();
+//            //返回上一页面，并且上一页面重新查询。
+//
+//        }
+        else if (isNull == 3) {
             Toast.makeText(SwitchFormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
         } else {
@@ -239,6 +241,14 @@ public class SwitchFormingActivity extends BaseActivity {
                 if (Integer.valueOf(num) > 500 || sum > 999999) {
                     Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                //如果存在上一个未完成的计划，结束上一计划
+                if (vplan != null && isNull == 2) {
+                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
+                    String endBarcode = String.format("%06d", endnumber);
+                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
+                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                    new FINISHTask().execute(param1);
                 }
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
@@ -360,16 +370,16 @@ public class SwitchFormingActivity extends BaseActivity {
                 }
 
                 //上一计划结束条码
-                if(!StringUtil.isNullOrEmpty(preEndCode)){
+                if (!StringUtil.isNullOrEmpty(preEndCode)) {
                     preEndCode = "";
                 }
                 preEndCode = ed_EndCode.getText().toString().trim();
                 //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
-                if(ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                if (ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
                     //执行结束上一计划操作
                     String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                     new FINISHTask().execute(param);
-                }else if(!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())){
+                } else if (!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
                     //执行开始计划接口更新开始条码
                     String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                     new PRESTARTTask().execute(param);
@@ -669,7 +679,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //弹窗
-                        dialogToStart();
+//                        dialogToStart();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
