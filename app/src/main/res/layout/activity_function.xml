@@ -7,15 +7,9 @@
 >
     <!-- 标题 功能菜单 -->
     <include layout="@layout/titel_update"/>
-    <!--    <com.xuexiang.xui.widget.actionbar.TitleBar-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="40dp"-->
-    <!--            android:background="@color/xui_btn_blue_normal_color"-->
-    <!--            app:tb_dividerColor="@color/xui_config_color_red"-->
-    <!--            app:tb_titleText="@string/Function">-->
-    <!--    </com.xuexiang.xui.widget.actionbar.TitleBar>-->
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -25,174 +19,182 @@
                     android:layout_height="250dp"
                     android:layout_marginTop="0dp"
                     android:id="@+id/cx"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="成型"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
                         android:layout_width="350dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="35dp"
                         android:background="@color/black_textview"/>
                 <LinearLayout
                         android:id="@+id/view9"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/forming"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/brown"
                             android:src="@drawable/btn_vplan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型生产"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/text_children"
+                            android:textAlignment="center"
                     />
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/view10"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/switchforming"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/darkviolet"
                             android:src="@drawable/formingrepl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型规格交替"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/view11"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingbarcode"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/forestgreen"
                             android:src="@drawable/outbarcode"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型胎胚报废"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/view12"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingchange"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/gold"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型生产变更"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view14"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/selectformingplan"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/magenta"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="查看成型计划"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view15"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/delectformingcode"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/pink"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型取消扫描"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view18"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/formingsupplement"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/darksalmon"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="成型条码补录"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -202,177 +204,185 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/lh"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="硫化"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
                         android:layout_width="350dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="35dp"
                         android:background="@color/black_textview"/>
                 <LinearLayout
                         android:id="@+id/view1"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/vplan"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/button_backgroud"
                             android:src="@drawable/btn_vplan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化生产"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view5"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/repl"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/gray_pressed"
                             android:src="@drawable/btn_itnbrrepl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化规格交替"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view2"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/barsup"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/orangered"
                             android:src="@drawable/btn_supp"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化条码补录"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view3"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/barrep"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/orange"
                             android:src="@drawable/btn_repl"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化条码变更"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/view4"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/detch"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/green"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化明细变更"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view16"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="40dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/ProductNum"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/tomato"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="当班产量"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view17"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             android:id="@+id/deletevulcanization"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/btn_gray_pressed"
                             android:src="@drawable/btn_detial"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="硫化取消扫描"
-                            android:textSize="11sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -382,112 +392,117 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/jc"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="检测与其他"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
                         android:layout_width="350dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="35dp"
                         android:background="@color/black_textview"/>
                 <LinearLayout
                         android:id="@+id/view6"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="150dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/check"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/colorAccent"
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="检测"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view13"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="50dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/barcodeDetail"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/greenyellow"
                             android:src="@drawable/barcodedetail"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="生产追溯"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view20"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="50dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/newcheck"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/colorAccent"
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="质检"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
                 <LinearLayout
                         android:id="@+id/view21"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="240dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="50dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/checkagain"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/mediumspringgreen"
                             android:src="@drawable/btn_check"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="热补复检"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
 
@@ -498,23 +513,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:id="@+id/zc"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="出厂"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_head"
                 />
                 <View
                         android:layout_height="1px"
                         android:layout_width="350dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="40dp"
                         android:background="@color/black_textview"/>
                 <LinearLayout
                         android:id="@+id/view7"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginTop="50dp"
@@ -522,39 +538,41 @@
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/load"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/burlywood"
                             android:src="@drawable/btn_vload"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="装车出厂"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/view8"
                         android:orientation="vertical"
-                        android:layout_width="70dp"
+                        android:layout_width="80dp"
                         android:layout_height="90dp"
-                        android:layout_marginLeft="135dp"
+                        android:layout_marginLeft="125dp"
                         android:layout_marginTop="50dp"
                         android:visibility="gone">
                     <ImageButton
                             style="@style/ButtonView.Blue"
                             android:id="@+id/loadsc"
-                            android:layout_width="70dp"
+                            android:layout_width="80dp"
                             android:layout_height="70dp"
                             android:background="@color/plum"
                             android:src="@drawable/btn_loadscan"
                             android:visibility="visible"/>
                     <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="退厂扫描"
-                            android:textSize="13sp"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_children"
                     />
                 </LinearLayout>
             </RelativeLayout>
