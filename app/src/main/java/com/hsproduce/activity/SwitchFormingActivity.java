@@ -175,12 +175,12 @@ public class SwitchFormingActivity extends BaseActivity {
             //返回上一页面，并且上一页面重新查询。
 
         }
-//        else if (isNull == 2) {
-//            //完成计划
-//            dialogToFinish();
-//            //返回上一页面，并且上一页面重新查询。
-//
-//        }
+        else if (isNull == 2) {
+            //完成计划
+            dialogToFinish();
+            //返回上一页面，并且上一页面重新查询。
+
+        }
         else if (isNull == 3) {
             Toast.makeText(SwitchFormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
@@ -243,13 +243,13 @@ public class SwitchFormingActivity extends BaseActivity {
                     return;
                 }
                 //如果存在上一个未完成的计划，结束上一计划
-                if (vplan != null && isNull == 2) {
-                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
-                    String endBarcode = String.format("%06d", endnumber);
-                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
-                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                    new FINISHTask().execute(param1);
-                }
+//                if (vplan != null && isNull == 2) {
+//                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
+//                    String endBarcode = String.format("%06d", endnumber);
+//                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
+//                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+//                    new FINISHTask().execute(param1);
+//                }
                 //执行操作接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -679,7 +679,7 @@ public class SwitchFormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //弹窗
-//                        dialogToStart();
+                        dialogToStart();
                     } else {
                         Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;

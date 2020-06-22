@@ -224,11 +224,11 @@ public class FormingActivity extends BaseActivity {
             //开始计划
             dialogToStart();
         }
-//        else if (isNull == 2) {
-//            //完成计划
-//            //执行结束上一计划
-//            dialogToFinish();
-//        }
+        else if (isNull == 2) {
+            //完成计划
+            //执行结束上一计划
+            dialogToFinish();
+        }
         else if (isNull == 3) {
             Toast.makeText(FormingActivity.this, "网络连接异常，请重新登录。", Toast.LENGTH_SHORT).show();
             return;
@@ -386,13 +386,13 @@ public class FormingActivity extends BaseActivity {
                 }
                 startCode = nextCode;
                 //如果存在上一个未完成的计划，结束上一计划
-                if (vplan != null && isNull == 2) {
-                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
-                    String endBarcode = String.format("%06d", endnumber);
-                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
-                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                    new DIALOGFINISHTask().execute(param1);
-                }
+//                if (vplan != null && isNull == 2) {
+//                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
+//                    String endBarcode = String.format("%06d", endnumber);
+//                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
+//                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+//                    new DIALOGFINISHTask().execute(param1);
+//                }
                 //执行开始计划接口
                 String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
                 new GETSTARTTask().execute(param);
@@ -916,7 +916,7 @@ public class FormingActivity extends BaseActivity {
                     }
                     if (res.get("code").equals("200")) {
                         //弹窗执行开始计划
-//                        dialogToStart();
+                        dialogToStart();
                     } else {
                         Toast.makeText(FormingActivity.this, res.get("msg").toString(), Toast.LENGTH_SHORT).show();
                         return;
