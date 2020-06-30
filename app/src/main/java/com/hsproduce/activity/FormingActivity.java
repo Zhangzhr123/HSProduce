@@ -220,7 +220,7 @@ public class FormingActivity extends BaseActivity {
 
     //开始
     public void startPlan() {
-        if (isNull == 1 || isNull == 2) {
+        if (isNull == 1) {
             //开始计划
             dialogToStart();
         }

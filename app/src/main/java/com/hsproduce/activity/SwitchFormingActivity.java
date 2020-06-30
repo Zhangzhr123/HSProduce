@@ -169,7 +169,7 @@ public class SwitchFormingActivity extends BaseActivity {
     }
 
     public void replace() {
-        if (isNull == 1 || isNull == 2) {
+        if (isNull == 1) {
             //开始计划
             dialogToStart();
             //返回上一页面，并且上一页面重新查询。
