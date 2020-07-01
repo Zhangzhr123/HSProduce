@@ -143,7 +143,7 @@ public class ProductNumActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(mchid)){
             mchId = 0+"";
         } else {
-            mchid = mchid.substring(0,3);
+//            mchid = mchid.substring(0,3);
             mchId = mchid;
         }
         //api/PDA/GetDnumSum?UserName=R18183&team=3&mchid=0
