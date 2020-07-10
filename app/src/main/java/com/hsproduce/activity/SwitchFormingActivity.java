@@ -58,6 +58,7 @@ public class SwitchFormingActivity extends BaseActivity {
     //是否提示错误
     private Boolean isShow = true;
     private String preEndCode = "";//上一计划结束条码
+    private String cxjy = "";//成型验证校验
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,9 @@ public class SwitchFormingActivity extends BaseActivity {
         eventsViews();
         //获取计划按钮
         btGetPlan = (ButtonView) findViewById(R.id.getSwitchPlan);
+        //是否启用成型验证校验
+        String parm = "TYPE_ID=10114";
+        new CXJYTask().execute(parm);
 
     }
 
@@ -222,27 +226,31 @@ public class SwitchFormingActivity extends BaseActivity {
                 jt = jt.substring(jt.length() - 2, jt.length());
                 String nextCode = next.getText().toString();
                 num = number.getText().toString();
-                //如果为空则进行操作
-                if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
-                    Toast.makeText(SwitchFormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                if (nextCode.length() != 12) {
-                    Toast.makeText(SwitchFormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String nextjt = nextCode.substring(4, 6);
-                if (!jt.equals(nextjt)) {
-                    Toast.makeText(SwitchFormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Integer sum = Integer.valueOf(nextCode.substring(6, 12)) + Integer.valueOf(num);
-                if (Integer.valueOf(num) > 500 || sum > 999999) {
-                    Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //如果存在上一个未完成的计划，结束上一计划
+                //成型验证校验
+                if(!StringUtil.isNullOrEmpty(cxjy)) {
+                    if (cxjy.equals("1")) {
+                        //如果为空则进行操作
+                        if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
+                            Toast.makeText(SwitchFormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (nextCode.length() != 12) {
+                            Toast.makeText(SwitchFormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String nextjt = nextCode.substring(4, 6);
+                        if (!jt.equals(nextjt)) {
+                            Toast.makeText(SwitchFormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Integer sum = Integer.valueOf(nextCode.substring(6, 12)) + Integer.valueOf(num);
+                        if (Integer.valueOf(num) > 500 || sum > 999999) {
+                            Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //如果存在上一个未完成的计划，结束上一计划
 //                if (vplan != null && isNull == 2) {
 //                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
 //                    String endBarcode = String.format("%06d", endnumber);
@@ -250,17 +258,64 @@ public class SwitchFormingActivity extends BaseActivity {
 //                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
 //                    new FINISHTask().execute(param1);
 //                }
-                //执行操作接口
-                String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                new GETSTARTTask().execute(param);
-                //显示数据
-                tvState.setText("");
-                tvState.setText("生产中");
-                tvPNum.setText("");
-                tvPNum.setText(num);
-                //开始按钮不可用
-                btRepl.setEnabled(false);
-                btOut.setEnabled(true);
+                        //执行操作接口
+                        String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                        new GETSTARTTask().execute(param);
+                        //显示数据
+                        tvState.setText("");
+                        tvState.setText("生产中");
+                        tvPNum.setText("");
+                        tvPNum.setText(num);
+                        //开始按钮不可用
+                        btRepl.setEnabled(false);
+                        btOut.setEnabled(true);
+
+                    }else{
+                        //如果为空则进行操作
+                        if (num.equals("") || Integer.valueOf(num) <= 0 || nextCode.equals("")) {
+                            Toast.makeText(SwitchFormingActivity.this, "数量或开始条码为空，请输入！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (nextCode.length() != 12) {
+                            Toast.makeText(SwitchFormingActivity.this, "开始条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+//                        String nextjt = nextCode.substring(4, 6);
+//                        if (!jt.equals(nextjt)) {
+//                            Toast.makeText(SwitchFormingActivity.this, "开始条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+                        Integer sum = Integer.valueOf(nextCode.substring(6, 12)) + Integer.valueOf(num);
+                        if (Integer.valueOf(num) > 500 || sum > 999999) {
+                            Toast.makeText(SwitchFormingActivity.this, "数量不能大于500或者条码流水号不能大于999999", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //如果存在上一个未完成的计划，结束上一计划
+//                if (vplan != null && isNull == 2) {
+//                    int endnumber = Integer.valueOf(nextCode.substring(6, 12)) - 1;
+//                    String endBarcode = String.format("%06d", endnumber);
+//                    endBarcode = (nextCode.substring(0, 6)) + endBarcode;
+//                    String param1 = "VPLANID=" + vplan.getId() + "&EndBarcode=" + endBarcode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+//                    new FINISHTask().execute(param1);
+//                }
+                        //执行操作接口
+                        String param = "VPLANID=" + currid + "&StartBarcode=" + nextCode + "&Num=" + num + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                        new GETSTARTTask().execute(param);
+                        //显示数据
+                        tvState.setText("");
+                        tvState.setText("生产中");
+                        tvPNum.setText("");
+                        tvPNum.setText(num);
+                        //开始按钮不可用
+                        btRepl.setEnabled(false);
+                        btOut.setEnabled(true);
+                    }
+                }else{
+                    Toast.makeText(SwitchFormingActivity.this, "成型验校验为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 dialog.dismiss();
                 //提示音
                 SoundPlayUtils.startNoti(SwitchFormingActivity.this);
@@ -314,75 +369,155 @@ public class SwitchFormingActivity extends BaseActivity {
                 jt = jt.substring(jt.length() - 2, jt.length());
                 String endCode = ed_EndCode.getText().toString();
 
-                //如果为空则进行操作
-                if (endCode.equals("") || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
-                    Toast.makeText(SwitchFormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                //成型验证校验
+                if(!StringUtil.isNullOrEmpty(cxjy)) {
+                    if (cxjy.equals("1")) {
+                        //如果为空则进行操作
+                        if (endCode.equals("") || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
-                    Toast.makeText(SwitchFormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String endjt = endCode.substring(4, 6);
-                String startjt = ed_StartCode.getText().toString().substring(4, 6);
-                if (!jt.equals(endjt) || !jt.equals(startjt)) {
-                    Toast.makeText(SwitchFormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String start = ed_StartCode.getText().toString().substring(0, 6);
-                String end = endCode.substring(0, 6);
-                if (!start.equals(end)) {
-                    Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //判断数量是否正确
-                Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
-                Integer endNum = Integer.valueOf(endCode.substring(6, 12));
-                if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
-                    final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
-                    normalDialog.setTitle("提示");
-                    normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
-                    normalDialog.setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ed_EndCode.setText("");
-                                    //提示音
-                                    SoundPlayUtils.startNoti(SwitchFormingActivity.this);
-                                    SoundPlayUtils.stopAlarm();
-                                }
-                            });
-                    normalDialog.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ed_EndCode.setText("");
-                                    //提示音
-                                    SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
-                                    SoundPlayUtils.stopAlarm();
-                                }
-                            });
+                        if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String endjt = endCode.substring(4, 6);
+                        String startjt = ed_StartCode.getText().toString().substring(4, 6);
+                        if (!jt.equals(endjt) || !jt.equals(startjt)) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码不属于此机台，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String start = ed_StartCode.getText().toString().substring(0, 4);
+                        String end = endCode.substring(0, 4);
+                        if (!start.equals(end)) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //判断数量是否正确
+                        Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
+                        Integer endNum = Integer.valueOf(endCode.substring(6, 12));
+                        if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(SwitchFormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
 
-                    // 显示
-                    normalDialog.show();
-                    return;
-                }
+                            // 显示
+                            normalDialog.show();
+                            return;
+                        }
 
-                //上一计划结束条码
-                if (!StringUtil.isNullOrEmpty(preEndCode)) {
-                    preEndCode = "";
-                }
-                preEndCode = ed_EndCode.getText().toString().trim();
-                //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
-                if (ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
-                    //执行结束上一计划操作
-                    String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                    new FINISHTask().execute(param);
-                } else if (!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
-                    //执行开始计划接口更新开始条码
-                    String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
-                    new PRESTARTTask().execute(param);
+                        //上一计划结束条码
+                        if (!StringUtil.isNullOrEmpty(preEndCode)) {
+                            preEndCode = "";
+                        }
+                        preEndCode = ed_EndCode.getText().toString().trim();
+                        //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
+                        if (ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
+                            //执行结束上一计划操作
+                            String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                            new FINISHTask().execute(param);
+                        } else if (!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
+                            //执行开始计划接口更新开始条码
+                            String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                            new PRESTARTTask().execute(param);
+                        }
+
+                    }else{
+                        //如果为空则进行操作
+                        if (endCode.equals("") || StringUtil.isNullOrEmpty(ed_StartCode.getText().toString())) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码为空，请输入！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (endCode.length() != 12 || ed_StartCode.getText().toString().length() != 12) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码规格不正确，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String endjt = endCode.substring(4, 6);
+                        String startjt = ed_StartCode.getText().toString().substring(4, 6);
+                        if (!endjt.equals(startjt)) {
+                            Toast.makeText(SwitchFormingActivity.this, "看开始条码与结束条码的机台不一致，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String start = ed_StartCode.getText().toString().substring(0, 4);
+                        String end = endCode.substring(0, 4);
+                        if (!start.equals(end)) {
+                            Toast.makeText(SwitchFormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //判断数量是否正确
+                        Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
+                        Integer endNum = Integer.valueOf(endCode.substring(6, 12));
+                        if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(SwitchFormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(SwitchFormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(SwitchFormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+
+                            // 显示
+                            normalDialog.show();
+                            return;
+                        }
+
+                        //上一计划结束条码
+                        if (!StringUtil.isNullOrEmpty(preEndCode)) {
+                            preEndCode = "";
+                        }
+                        preEndCode = ed_EndCode.getText().toString().trim();
+                        //如果开始条码发生改变则进行修改开始条码操作，如果没有则直接结束上一计划
+                        if (ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
+                            //执行结束上一计划操作
+                            String param = "VPLANID=" + vplan.getId() + "&EndBarcode=" + preEndCode + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                            new FINISHTask().execute(param);
+                        } else if (!ed_StartCode.getText().toString().equals(vplan.getBarcodestart())) {
+                            //执行开始计划接口更新开始条码
+                            String param = "VPLANID=" + vplan.getId() + "&StartBarcode=" + ed_StartCode.getText().toString() + "&Num=200" + "&TEAM=" + App.shift + "&User_Name=" + App.username;
+                            new PRESTARTTask().execute(param);
+                        }
+                    }
+                }else{
+                    Toast.makeText(SwitchFormingActivity.this, "成型验校验为空", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 dialog.dismiss();
@@ -689,6 +824,43 @@ public class SwitchFormingActivity extends BaseActivity {
                     e.printStackTrace();
                     Toast.makeText(SwitchFormingActivity.this, "操作失败！", Toast.LENGTH_SHORT).show();
                     return;
+                }
+            }
+        }
+    }
+
+    //获取数据字典内容  校验
+    class CXJYTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strs) {
+            String result = HttpUtil.sendGet(PathUtil.GetDictionaries, strs[0]);
+            return result;
+        }
+
+        //事后执行
+        @Override
+        protected void onPostExecute(String s) {
+            cxjy = "";
+            if (StringUtil.isNullOrBlank(s)) {
+                Toast.makeText(SwitchFormingActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    Map<String, Object> res = App.gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                    }.getType());
+                    List<Map<String, String>> map = (List<Map<String, String>>) res.get("data");
+                    if (res == null || res.isEmpty()) {
+                        Toast.makeText(SwitchFormingActivity.this, "未获取到校验信息", Toast.LENGTH_LONG).show();
+                    }
+                    if (res.get("code").equals("200")) {
+                        cxjy = map.get(0).get("itemname");
+                        System.out.println("成型验证校验==="+cxjy);
+                    }  else {
+                        Toast.makeText(SwitchFormingActivity.this, res.get("msg").toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(SwitchFormingActivity.this, "数据处理异常", Toast.LENGTH_LONG).show();
                 }
             }
         }

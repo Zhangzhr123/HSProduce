@@ -15,7 +15,7 @@ public class App extends Application {
     public static Gson gson = new Gson();
     public static String username = "";//用户名
     public static String usercode = "";//工号
-    public static String password = "";//面
+    public static String password = "";//密码
     public static String shift = "";//班组
     public static String lr = "";//左右膜
     public static String access_token = "";
