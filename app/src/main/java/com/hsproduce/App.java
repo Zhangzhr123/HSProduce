@@ -21,7 +21,7 @@ public class App extends Application {
     public static String access_token = "";
     public static String Iu = "";
     public static String ip = "10.2.129.132:8001";//10.2.129.132:8001
-    public static String version = "1.3.9";//版本号 要与系统发布版本号对比一致不用更新不一致更新
+    public static String version = "1.4.0";//版本号 要与系统发布版本号对比一致不用更新不一致更新
     public static String pdaType = "";//设备类型
 
     @Override

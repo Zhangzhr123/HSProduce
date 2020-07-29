@@ -296,6 +296,9 @@ public class VulcanizationActivity extends BaseActivity {
                     } else if (res.get("code").equals("400")) {
                         //提示音
                         SoundPlayUtils.playSoundByMedia(VulcanizationActivity.this, R.raw.raw3);
+                        //提示音
+                        SoundPlayUtils.startNoti(VulcanizationActivity.this);
+                        SoundPlayUtils.stopAlarm();
 
                         if (materialDialog == null) {
                             materialDialog = new MaterialDialog.Builder(VulcanizationActivity.this)
