@@ -542,6 +542,39 @@ public class FormingActivity extends BaseActivity {
                             Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
+
+                        //判断是否超过500
+                        Long startSum = Long.parseLong(ed_StartCode.getText().toString().substring(0, 12));
+                        Long endSum = Long.parseLong(endCode.substring(0, 12));
+                        if ((endSum - startSum) >= 500 || (endSum - startSum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            // 显示
+                            normalDialog.show();
+                            return;
+                        }
+
                         //判断是否超过500
                         Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
                         Integer endNum = Integer.valueOf(endCode.substring(6, 12));
@@ -614,6 +647,39 @@ public class FormingActivity extends BaseActivity {
                             Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
                             return;
                         }
+
+                        //判断是否超过500
+                        Long startSum = Long.parseLong(ed_StartCode.getText().toString().substring(0, 12));
+                        Long endSum = Long.parseLong(endCode.substring(0, 12));
+                        if ((endSum - startSum) >= 500 || (endSum - startSum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            // 显示
+                            normalDialog.show();
+                            return;
+                        }
+
                         //判断是否超过500
                         Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
                         Integer endNum = Integer.valueOf(endCode.substring(6, 12));
@@ -756,6 +822,38 @@ public class FormingActivity extends BaseActivity {
                         }
 
                         //判断是否超过500
+                        Long startSum = Long.parseLong(ed_StartCode.getText().toString().substring(0, 12));
+                        Long endSum = Long.parseLong(endCode.substring(0, 12));
+                        if ((endSum - startSum) >= 500 || (endSum - startSum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            // 显示
+                            normalDialog.show();
+                            return;
+                        }
+
+                        //判断是否超过500
                         Integer startNum = Integer.valueOf(ed_StartCode.getText().toString().substring(6, 12));
                         Integer endNum = Integer.valueOf(endCode.substring(6, 12));
                         if ((endNum - startNum) >= 500 || (endNum - startNum) < 0) {
@@ -849,6 +947,38 @@ public class FormingActivity extends BaseActivity {
                         String endYear = endCode.substring(0, 4);
                         if (!startYear.equals(endYear)) {
                             Toast.makeText(FormingActivity.this, "条码不能跨年，请重新输入", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        //判断是否超过500
+                        Long startSum = Long.parseLong(ed_StartCode.getText().toString().substring(0, 12));
+                        Long endSum = Long.parseLong(endCode.substring(0, 12));
+                        if ((endSum - startSum) >= 500 || (endSum - startSum) < 0) {
+                            final android.app.AlertDialog.Builder normalDialog = new android.app.AlertDialog.Builder(FormingActivity.this);
+                            normalDialog.setTitle("提示");
+                            normalDialog.setMessage("开始条码为：" + ed_StartCode.getText().toString() + "，结束条码为：" + endCode + ",数量超过500或数量小于等于0，请确认结束条码是否正确");
+                            normalDialog.setPositiveButton("确定",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startNoti(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            normalDialog.setNegativeButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ed_EndCode.setText("");
+                                            //提示音
+                                            SoundPlayUtils.startAlarm(FormingActivity.this);
+                                            SoundPlayUtils.stopAlarm();
+                                        }
+                                    });
+                            // 显示
+                            normalDialog.show();
                             return;
                         }
 
